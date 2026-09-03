@@ -56,5 +56,5 @@ export const bootstrapAccount = createServerFn({ method: "POST" })
       return { role };
     }
 
-    return { role: existingRoles[0].role };
+    return { role: existingRoles[0]!.role };
   });

@@ -36,7 +36,7 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
 
   const finish = async (name?: string) => {
-    const { role } = await bootstrap({ data: { fullName: name } });
+    const { role } = await bootstrap({ data: name ? { fullName: name } : {} });
     toast.success("Sesión iniciada");
     await navigate({ to: role === "customer" ? "/mis-pedidos" : "/dashboard" });
   };

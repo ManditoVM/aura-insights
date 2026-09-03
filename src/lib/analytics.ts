@@ -57,17 +57,20 @@ export function linearRegression(values: number[]) {
   let num = 0;
   let den = 0;
   for (let i = 0; i < n; i++) {
-    num += (xs[i] - mx) * (values[i] - my);
-    den += (xs[i] - mx) ** 2;
+    const x = xs[i] ?? 0;
+    const y = values[i] ?? 0;
+    num += (x - mx) * (y - my);
+    den += (x - mx) ** 2;
   }
   const slope = den === 0 ? 0 : num / den;
   const intercept = my - slope * mx;
   let ssTot = 0;
   let ssRes = 0;
   for (let i = 0; i < n; i++) {
-    const pred = intercept + slope * xs[i];
-    ssTot += (values[i] - my) ** 2;
-    ssRes += (values[i] - pred) ** 2;
+    const y = values[i] ?? 0;
+    const pred = intercept + slope * (xs[i] ?? 0);
+    ssTot += (y - my) ** 2;
+    ssRes += (y - pred) ** 2;
   }
   const r2 = ssTot === 0 ? 0 : Math.max(0, 1 - ssRes / ssTot);
   return { slope, intercept, r2 };

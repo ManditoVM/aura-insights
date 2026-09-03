@@ -321,7 +321,9 @@ export const publicChat = createServerFn({ method: "POST" })
       sku: p.sku,
       nombre: p.name,
       marca: p.brand,
-      categoria: (p.categories as { name: string } | null)?.name ?? null,
+      categoria: Array.isArray(p.categories)
+        ? (p.categories[0]?.name ?? null)
+        : ((p.categories as { name: string } | null)?.name ?? null),
       precio: Number(p.price),
       disponible: p.stock > 0,
       unidades_disponibles: p.stock,
