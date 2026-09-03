@@ -86,7 +86,7 @@ export function RiskBadge({ risk }: { risk: string }) {
     <span
       className={cn(
         "inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] capitalize",
-        map[risk] ?? map.bajo,
+        map[risk] ?? map["bajo"],
       )}
     >
       {risk}

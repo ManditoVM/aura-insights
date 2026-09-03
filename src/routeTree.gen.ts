@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAuraRouteImport } from './routes/_authenticated/aura'
 import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedMisPedidosRouteImport } from './routes/_authenticated/mis-pedidos'
 import { Route as AuthenticatedProductosRouteImport } from './routes/_authenticated/productos'
 
 const IndexRoute = IndexRouteImport.update({
@@ -30,6 +32,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAuraRoute = AuthenticatedAuraRouteImport.update({
+  id: '/aura',
+  path: '/aura',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
   id: '/clientes',
   path: '/clientes',
@@ -38,6 +45,11 @@ const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMisPedidosRoute = AuthenticatedMisPedidosRouteImport.update({
+  id: '/mis-pedidos',
+  path: '/mis-pedidos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProductosRoute = AuthenticatedProductosRouteImport.update({
@@ -49,15 +61,19 @@ const AuthenticatedProductosRoute = AuthenticatedProductosRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/aura': typeof AuthenticatedAuraRoute
   '/clientes': typeof AuthenticatedClientesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/productos': typeof AuthenticatedProductosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/aura': typeof AuthenticatedAuraRoute
   '/clientes': typeof AuthenticatedClientesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/productos': typeof AuthenticatedProductosRoute
 }
 export interface FileRoutesById {
@@ -65,22 +81,40 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/aura': typeof AuthenticatedAuraRoute
   '/_authenticated/clientes': typeof AuthenticatedClientesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/_authenticated/productos': typeof AuthenticatedProductosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/clientes' | '/dashboard' | '/productos'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/aura'
+    | '/clientes'
+    | '/dashboard'
+    | '/mis-pedidos'
+    | '/productos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/clientes' | '/dashboard' | '/productos'
+  to:
+    | '/'
+    | '/auth'
+    | '/aura'
+    | '/clientes'
+    | '/dashboard'
+    | '/mis-pedidos'
+    | '/productos'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/aura'
     | '/_authenticated/clientes'
     | '/_authenticated/dashboard'
+    | '/_authenticated/mis-pedidos'
     | '/_authenticated/productos'
   fileRoutesById: FileRoutesById
 }
@@ -113,6 +147,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/aura': {
+      id: '/_authenticated/aura'
+      path: '/aura'
+      fullPath: '/aura'
+      preLoaderRoute: typeof AuthenticatedAuraRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/clientes': {
       id: '/_authenticated/clientes'
       path: '/clientes'
@@ -127,6 +168,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/mis-pedidos': {
+      id: '/_authenticated/mis-pedidos'
+      path: '/mis-pedidos'
+      fullPath: '/mis-pedidos'
+      preLoaderRoute: typeof AuthenticatedMisPedidosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/productos': {
       id: '/_authenticated/productos'
       path: '/productos'
@@ -138,14 +186,18 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAuraRoute: typeof AuthenticatedAuraRoute
   AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMisPedidosRoute: typeof AuthenticatedMisPedidosRoute
   AuthenticatedProductosRoute: typeof AuthenticatedProductosRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAuraRoute: AuthenticatedAuraRoute,
   AuthenticatedClientesRoute: AuthenticatedClientesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMisPedidosRoute: AuthenticatedMisPedidosRoute,
   AuthenticatedProductosRoute: AuthenticatedProductosRoute,
 }
 

@@ -66,19 +66,8 @@ function ProductosPage() {
   const [sort, setSort] = useState("nombre");
   const [form, setForm] = useState<ProductForm | null>(null);
 
-  const raw = products as Record<string, never>[] as unknown as {
-    id: string;
-    sku: string;
-    name: string;
-    description: string | null;
-    brand: string | null;
-    category_id: string | null;
-    price: number;
-    cost: number;
-    min_stock: number;
-    max_stock: number;
-    categories: { name: string } | null;
-  }[];
+  const raw = products;
+
 
   let rows = metrics.filter((m) => {
     const p = raw.find((r) => r.id === m.product.id);
