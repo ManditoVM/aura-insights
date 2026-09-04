@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAuraRouteImport } from './routes/_authenticated/aura'
 import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedInventarioRouteImport } from './routes/_authenticated/inventario'
 import { Route as AuthenticatedMisPedidosRouteImport } from './routes/_authenticated/mis-pedidos'
 import { Route as AuthenticatedProductosRouteImport } from './routes/_authenticated/productos'
 
@@ -47,6 +48,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedInventarioRoute = AuthenticatedInventarioRouteImport.update({
+  id: '/inventario',
+  path: '/inventario',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMisPedidosRoute = AuthenticatedMisPedidosRouteImport.update({
   id: '/mis-pedidos',
   path: '/mis-pedidos',
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/aura': typeof AuthenticatedAuraRoute
   '/clientes': typeof AuthenticatedClientesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/inventario': typeof AuthenticatedInventarioRoute
   '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/productos': typeof AuthenticatedProductosRoute
 }
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/aura': typeof AuthenticatedAuraRoute
   '/clientes': typeof AuthenticatedClientesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/inventario': typeof AuthenticatedInventarioRoute
   '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/productos': typeof AuthenticatedProductosRoute
 }
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/_authenticated/aura': typeof AuthenticatedAuraRoute
   '/_authenticated/clientes': typeof AuthenticatedClientesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/inventario': typeof AuthenticatedInventarioRoute
   '/_authenticated/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/_authenticated/productos': typeof AuthenticatedProductosRoute
 }
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
     | '/aura'
     | '/clientes'
     | '/dashboard'
+    | '/inventario'
     | '/mis-pedidos'
     | '/productos'
   fileRoutesByTo: FileRoutesByTo
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
     | '/aura'
     | '/clientes'
     | '/dashboard'
+    | '/inventario'
     | '/mis-pedidos'
     | '/productos'
   id:
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
     | '/_authenticated/aura'
     | '/_authenticated/clientes'
     | '/_authenticated/dashboard'
+    | '/_authenticated/inventario'
     | '/_authenticated/mis-pedidos'
     | '/_authenticated/productos'
   fileRoutesById: FileRoutesById
@@ -168,6 +180,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/inventario': {
+      id: '/_authenticated/inventario'
+      path: '/inventario'
+      fullPath: '/inventario'
+      preLoaderRoute: typeof AuthenticatedInventarioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/mis-pedidos': {
       id: '/_authenticated/mis-pedidos'
       path: '/mis-pedidos'
@@ -189,6 +208,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAuraRoute: typeof AuthenticatedAuraRoute
   AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedInventarioRoute: typeof AuthenticatedInventarioRoute
   AuthenticatedMisPedidosRoute: typeof AuthenticatedMisPedidosRoute
   AuthenticatedProductosRoute: typeof AuthenticatedProductosRoute
 }
@@ -197,6 +217,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAuraRoute: AuthenticatedAuraRoute,
   AuthenticatedClientesRoute: AuthenticatedClientesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedInventarioRoute: AuthenticatedInventarioRoute,
   AuthenticatedMisPedidosRoute: AuthenticatedMisPedidosRoute,
   AuthenticatedProductosRoute: AuthenticatedProductosRoute,
 }
