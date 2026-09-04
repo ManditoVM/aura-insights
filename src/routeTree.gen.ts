@@ -19,6 +19,7 @@ import { Route as AuthenticatedInventarioRouteImport } from './routes/_authentic
 import { Route as AuthenticatedMisPedidosRouteImport } from './routes/_authenticated/mis-pedidos'
 import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticated/pedidos'
 import { Route as AuthenticatedProductosRouteImport } from './routes/_authenticated/productos'
+import { Route as AuthenticatedTransaccionesRouteImport } from './routes/_authenticated/transacciones'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -69,6 +70,12 @@ const AuthenticatedProductosRoute = AuthenticatedProductosRouteImport.update({
   path: '/productos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTransaccionesRoute =
+  AuthenticatedTransaccionesRouteImport.update({
+    id: '/transacciones',
+    path: '/transacciones',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/productos': typeof AuthenticatedProductosRoute
+  '/transacciones': typeof AuthenticatedTransaccionesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,6 +99,7 @@ export interface FileRoutesByTo {
   '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/productos': typeof AuthenticatedProductosRoute
+  '/transacciones': typeof AuthenticatedTransaccionesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +113,7 @@ export interface FileRoutesById {
   '/_authenticated/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/_authenticated/pedidos': typeof AuthenticatedPedidosRoute
   '/_authenticated/productos': typeof AuthenticatedProductosRoute
+  '/_authenticated/transacciones': typeof AuthenticatedTransaccionesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/mis-pedidos'
     | '/pedidos'
     | '/productos'
+    | '/transacciones'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/mis-pedidos'
     | '/pedidos'
     | '/productos'
+    | '/transacciones'
   id:
     | '__root__'
     | '/'
@@ -140,6 +152,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mis-pedidos'
     | '/_authenticated/pedidos'
     | '/_authenticated/productos'
+    | '/_authenticated/transacciones'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -220,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProductosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/transacciones': {
+      id: '/_authenticated/transacciones'
+      path: '/transacciones'
+      fullPath: '/transacciones'
+      preLoaderRoute: typeof AuthenticatedTransaccionesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -231,6 +251,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMisPedidosRoute: typeof AuthenticatedMisPedidosRoute
   AuthenticatedPedidosRoute: typeof AuthenticatedPedidosRoute
   AuthenticatedProductosRoute: typeof AuthenticatedProductosRoute
+  AuthenticatedTransaccionesRoute: typeof AuthenticatedTransaccionesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -241,6 +262,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMisPedidosRoute: AuthenticatedMisPedidosRoute,
   AuthenticatedPedidosRoute: AuthenticatedPedidosRoute,
   AuthenticatedProductosRoute: AuthenticatedProductosRoute,
+  AuthenticatedTransaccionesRoute: AuthenticatedTransaccionesRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
