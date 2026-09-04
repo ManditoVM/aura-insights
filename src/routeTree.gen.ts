@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAuraRouteImport } from './routes/_authenticated/aura'
 import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedInteligenciaRouteImport } from './routes/_authenticated/inteligencia'
 import { Route as AuthenticatedInventarioRouteImport } from './routes/_authenticated/inventario'
 import { Route as AuthenticatedMisPedidosRouteImport } from './routes/_authenticated/mis-pedidos'
 import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticated/pedidos'
@@ -50,6 +51,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedInteligenciaRoute =
+  AuthenticatedInteligenciaRouteImport.update({
+    id: '/inteligencia',
+    path: '/inteligencia',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedInventarioRoute = AuthenticatedInventarioRouteImport.update({
   id: '/inventario',
   path: '/inventario',
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/aura': typeof AuthenticatedAuraRoute
   '/clientes': typeof AuthenticatedClientesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/inteligencia': typeof AuthenticatedInteligenciaRoute
   '/inventario': typeof AuthenticatedInventarioRoute
   '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
@@ -95,6 +103,7 @@ export interface FileRoutesByTo {
   '/aura': typeof AuthenticatedAuraRoute
   '/clientes': typeof AuthenticatedClientesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/inteligencia': typeof AuthenticatedInteligenciaRoute
   '/inventario': typeof AuthenticatedInventarioRoute
   '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
@@ -109,6 +118,7 @@ export interface FileRoutesById {
   '/_authenticated/aura': typeof AuthenticatedAuraRoute
   '/_authenticated/clientes': typeof AuthenticatedClientesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/inteligencia': typeof AuthenticatedInteligenciaRoute
   '/_authenticated/inventario': typeof AuthenticatedInventarioRoute
   '/_authenticated/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/_authenticated/pedidos': typeof AuthenticatedPedidosRoute
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
     | '/aura'
     | '/clientes'
     | '/dashboard'
+    | '/inteligencia'
     | '/inventario'
     | '/mis-pedidos'
     | '/pedidos'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '/aura'
     | '/clientes'
     | '/dashboard'
+    | '/inteligencia'
     | '/inventario'
     | '/mis-pedidos'
     | '/pedidos'
@@ -148,6 +160,7 @@ export interface FileRouteTypes {
     | '/_authenticated/aura'
     | '/_authenticated/clientes'
     | '/_authenticated/dashboard'
+    | '/_authenticated/inteligencia'
     | '/_authenticated/inventario'
     | '/_authenticated/mis-pedidos'
     | '/_authenticated/pedidos'
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/inteligencia': {
+      id: '/_authenticated/inteligencia'
+      path: '/inteligencia'
+      fullPath: '/inteligencia'
+      preLoaderRoute: typeof AuthenticatedInteligenciaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/inventario': {
       id: '/_authenticated/inventario'
       path: '/inventario'
@@ -247,6 +267,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAuraRoute: typeof AuthenticatedAuraRoute
   AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedInteligenciaRoute: typeof AuthenticatedInteligenciaRoute
   AuthenticatedInventarioRoute: typeof AuthenticatedInventarioRoute
   AuthenticatedMisPedidosRoute: typeof AuthenticatedMisPedidosRoute
   AuthenticatedPedidosRoute: typeof AuthenticatedPedidosRoute
@@ -258,6 +279,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAuraRoute: AuthenticatedAuraRoute,
   AuthenticatedClientesRoute: AuthenticatedClientesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedInteligenciaRoute: AuthenticatedInteligenciaRoute,
   AuthenticatedInventarioRoute: AuthenticatedInventarioRoute,
   AuthenticatedMisPedidosRoute: AuthenticatedMisPedidosRoute,
   AuthenticatedPedidosRoute: AuthenticatedPedidosRoute,
