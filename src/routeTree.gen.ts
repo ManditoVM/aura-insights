@@ -21,6 +21,7 @@ import { Route as AuthenticatedInventarioRouteImport } from './routes/_authentic
 import { Route as AuthenticatedMisPedidosRouteImport } from './routes/_authenticated/mis-pedidos'
 import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticated/pedidos'
 import { Route as AuthenticatedProductosRouteImport } from './routes/_authenticated/productos'
+import { Route as AuthenticatedReportesRouteImport } from './routes/_authenticated/reportes'
 import { Route as AuthenticatedTransaccionesRouteImport } from './routes/_authenticated/transacciones'
 
 const IndexRoute = IndexRouteImport.update({
@@ -83,6 +84,11 @@ const AuthenticatedProductosRoute = AuthenticatedProductosRouteImport.update({
   path: '/productos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReportesRoute = AuthenticatedReportesRouteImport.update({
+  id: '/reportes',
+  path: '/reportes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTransaccionesRoute =
   AuthenticatedTransaccionesRouteImport.update({
     id: '/transacciones',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/productos': typeof AuthenticatedProductosRoute
+  '/reportes': typeof AuthenticatedReportesRoute
   '/transacciones': typeof AuthenticatedTransaccionesRoute
 }
 export interface FileRoutesByTo {
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/productos': typeof AuthenticatedProductosRoute
+  '/reportes': typeof AuthenticatedReportesRoute
   '/transacciones': typeof AuthenticatedTransaccionesRoute
 }
 export interface FileRoutesById {
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/_authenticated/mis-pedidos': typeof AuthenticatedMisPedidosRoute
   '/_authenticated/pedidos': typeof AuthenticatedPedidosRoute
   '/_authenticated/productos': typeof AuthenticatedProductosRoute
+  '/_authenticated/reportes': typeof AuthenticatedReportesRoute
   '/_authenticated/transacciones': typeof AuthenticatedTransaccionesRoute
 }
 export interface FileRouteTypes {
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/mis-pedidos'
     | '/pedidos'
     | '/productos'
+    | '/reportes'
     | '/transacciones'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/mis-pedidos'
     | '/pedidos'
     | '/productos'
+    | '/reportes'
     | '/transacciones'
   id:
     | '__root__'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mis-pedidos'
     | '/_authenticated/pedidos'
     | '/_authenticated/productos'
+    | '/_authenticated/reportes'
     | '/_authenticated/transacciones'
   fileRoutesById: FileRoutesById
 }
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProductosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reportes': {
+      id: '/_authenticated/reportes'
+      path: '/reportes'
+      fullPath: '/reportes'
+      preLoaderRoute: typeof AuthenticatedReportesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/transacciones': {
       id: '/_authenticated/transacciones'
       path: '/transacciones'
@@ -292,6 +311,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMisPedidosRoute: typeof AuthenticatedMisPedidosRoute
   AuthenticatedPedidosRoute: typeof AuthenticatedPedidosRoute
   AuthenticatedProductosRoute: typeof AuthenticatedProductosRoute
+  AuthenticatedReportesRoute: typeof AuthenticatedReportesRoute
   AuthenticatedTransaccionesRoute: typeof AuthenticatedTransaccionesRoute
 }
 
@@ -305,6 +325,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMisPedidosRoute: AuthenticatedMisPedidosRoute,
   AuthenticatedPedidosRoute: AuthenticatedPedidosRoute,
   AuthenticatedProductosRoute: AuthenticatedProductosRoute,
+  AuthenticatedReportesRoute: AuthenticatedReportesRoute,
   AuthenticatedTransaccionesRoute: AuthenticatedTransaccionesRoute,
 }
 
