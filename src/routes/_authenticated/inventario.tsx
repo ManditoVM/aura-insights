@@ -76,8 +76,8 @@ function InventarioPage() {
         _product_id: values.product_id,
         _type: values.type,
         _quantity: Number(values.quantity),
-        _reason: values.reason || undefined,
         _reference: "MANUAL",
+        ...(values.reason ? { _reason: values.reason } : {}),
       });
       if (error) throw new Error(error.message);
     },
