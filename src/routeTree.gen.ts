@@ -25,6 +25,7 @@ import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedProductosRouteImport } from './routes/_authenticated/productos'
 import { Route as AuthenticatedReportesRouteImport } from './routes/_authenticated/reportes'
 import { Route as AuthenticatedTransaccionesRouteImport } from './routes/_authenticated/transacciones'
+import { Route as ProductoSkuRouteImport } from './routes/producto.$sku'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -108,6 +109,11 @@ const AuthenticatedTransaccionesRoute =
     path: '/transacciones',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ProductoSkuRoute = ProductoSkuRouteImport.update({
+  id: '/producto/$sku',
+  path: '/producto/$sku',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/productos': typeof AuthenticatedProductosRoute
   '/reportes': typeof AuthenticatedReportesRoute
   '/transacciones': typeof AuthenticatedTransaccionesRoute
+  '/producto/$sku': typeof ProductoSkuRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/productos': typeof AuthenticatedProductosRoute
   '/reportes': typeof AuthenticatedReportesRoute
   '/transacciones': typeof AuthenticatedTransaccionesRoute
+  '/producto/$sku': typeof ProductoSkuRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/_authenticated/productos': typeof AuthenticatedProductosRoute
   '/_authenticated/reportes': typeof AuthenticatedReportesRoute
   '/_authenticated/transacciones': typeof AuthenticatedTransaccionesRoute
+  '/producto/$sku': typeof ProductoSkuRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/productos'
     | '/reportes'
     | '/transacciones'
+    | '/producto/$sku'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/productos'
     | '/reportes'
     | '/transacciones'
+    | '/producto/$sku'
   id:
     | '__root__'
     | '/'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/_authenticated/productos'
     | '/_authenticated/reportes'
     | '/_authenticated/transacciones'
+    | '/producto/$sku'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -222,6 +234,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CatalogoRoute: typeof CatalogoRoute
+  ProductoSkuRoute: typeof ProductoSkuRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -338,6 +351,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTransaccionesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/producto/$sku': {
+      id: '/producto/$sku'
+      path: '/producto/$sku'
+      fullPath: '/producto/$sku'
+      preLoaderRoute: typeof ProductoSkuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -379,6 +399,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CatalogoRoute: CatalogoRoute,
+  ProductoSkuRoute: ProductoSkuRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
