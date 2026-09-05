@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as AuthenticatedAlertasRouteImport } from './routes/_authenticated/alertas'
 import { Route as AuthenticatedAuraRouteImport } from './routes/_authenticated/aura'
 import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
@@ -24,6 +25,7 @@ import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedProductosRouteImport } from './routes/_authenticated/productos'
 import { Route as AuthenticatedReportesRouteImport } from './routes/_authenticated/reportes'
 import { Route as AuthenticatedTransaccionesRouteImport } from './routes/_authenticated/transacciones'
+import { Route as ProductoSkuRouteImport } from './routes/producto.$sku'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,6 +39,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogoRoute = CatalogoRouteImport.update({
+  id: '/catalogo',
+  path: '/catalogo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAlertasRoute = AuthenticatedAlertasRouteImport.update({
@@ -102,10 +109,16 @@ const AuthenticatedTransaccionesRoute =
     path: '/transacciones',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ProductoSkuRoute = ProductoSkuRouteImport.update({
+  id: '/producto/$sku',
+  path: '/producto/$sku',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/catalogo': typeof CatalogoRoute
   '/alertas': typeof AuthenticatedAlertasRoute
   '/aura': typeof AuthenticatedAuraRoute
   '/clientes': typeof AuthenticatedClientesRoute
@@ -118,10 +131,12 @@ export interface FileRoutesByFullPath {
   '/productos': typeof AuthenticatedProductosRoute
   '/reportes': typeof AuthenticatedReportesRoute
   '/transacciones': typeof AuthenticatedTransaccionesRoute
+  '/producto/$sku': typeof ProductoSkuRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/catalogo': typeof CatalogoRoute
   '/alertas': typeof AuthenticatedAlertasRoute
   '/aura': typeof AuthenticatedAuraRoute
   '/clientes': typeof AuthenticatedClientesRoute
@@ -134,12 +149,14 @@ export interface FileRoutesByTo {
   '/productos': typeof AuthenticatedProductosRoute
   '/reportes': typeof AuthenticatedReportesRoute
   '/transacciones': typeof AuthenticatedTransaccionesRoute
+  '/producto/$sku': typeof ProductoSkuRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/catalogo': typeof CatalogoRoute
   '/_authenticated/alertas': typeof AuthenticatedAlertasRoute
   '/_authenticated/aura': typeof AuthenticatedAuraRoute
   '/_authenticated/clientes': typeof AuthenticatedClientesRoute
@@ -152,12 +169,14 @@ export interface FileRoutesById {
   '/_authenticated/productos': typeof AuthenticatedProductosRoute
   '/_authenticated/reportes': typeof AuthenticatedReportesRoute
   '/_authenticated/transacciones': typeof AuthenticatedTransaccionesRoute
+  '/producto/$sku': typeof ProductoSkuRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
+    | '/catalogo'
     | '/alertas'
     | '/aura'
     | '/clientes'
@@ -170,10 +189,12 @@ export interface FileRouteTypes {
     | '/productos'
     | '/reportes'
     | '/transacciones'
+    | '/producto/$sku'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/catalogo'
     | '/alertas'
     | '/aura'
     | '/clientes'
@@ -186,11 +207,13 @@ export interface FileRouteTypes {
     | '/productos'
     | '/reportes'
     | '/transacciones'
+    | '/producto/$sku'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/catalogo'
     | '/_authenticated/alertas'
     | '/_authenticated/aura'
     | '/_authenticated/clientes'
@@ -203,12 +226,15 @@ export interface FileRouteTypes {
     | '/_authenticated/productos'
     | '/_authenticated/reportes'
     | '/_authenticated/transacciones'
+    | '/producto/$sku'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CatalogoRoute: typeof CatalogoRoute
+  ProductoSkuRoute: typeof ProductoSkuRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -232,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalogo': {
+      id: '/catalogo'
+      path: '/catalogo'
+      fullPath: '/catalogo'
+      preLoaderRoute: typeof CatalogoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/alertas': {
@@ -318,6 +351,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTransaccionesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/producto/$sku': {
+      id: '/producto/$sku'
+      path: '/producto/$sku'
+      fullPath: '/producto/$sku'
+      preLoaderRoute: typeof ProductoSkuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -358,6 +398,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  CatalogoRoute: CatalogoRoute,
+  ProductoSkuRoute: ProductoSkuRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
