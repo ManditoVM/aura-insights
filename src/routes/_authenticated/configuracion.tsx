@@ -45,7 +45,12 @@ function ConfiguracionPage() {
   });
 
   return (
-    <AppShell title="Configuración" description="Accesos, reglas de negocio e integraciones">
+    <AppShell
+      require="admin"
+      title="Configuración"
+      description="Accesos, reglas de negocio e integraciones"
+    >
+
       <div className="grid gap-4 xl:grid-cols-2">
         <Panel title="Tu cuenta">
           <dl className="space-y-2 text-sm">
