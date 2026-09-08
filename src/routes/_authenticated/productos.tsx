@@ -113,6 +113,7 @@ function ProductosPage() {
 
   return (
     <AppShell
+      require="staff"
       title="Catálogo de productos"
       description={`${number(rows.length)} productos · el stock solo cambia mediante movimientos de inventario`}
       actions={

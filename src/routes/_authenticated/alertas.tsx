@@ -56,6 +56,7 @@ function AlertasPage() {
 
   return (
     <AppShell
+      require="staff"
       title="Centro de alertas"
       description="Eventos generados automáticamente por reglas del sistema y por la capa de inteligencia"
       actions={

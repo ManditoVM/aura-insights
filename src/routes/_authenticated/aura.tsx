@@ -71,6 +71,7 @@ function AuraPage() {
 
   return (
     <AppShell
+      require="staff"
       title="Asistente AURA"
       description="Respuestas basadas en datos reales de la base de datos · las acciones requieren tu confirmación"
     >
