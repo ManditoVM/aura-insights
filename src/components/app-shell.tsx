@@ -141,7 +141,23 @@ export function AppShell({
           </div>
           {actions}
         </header>
-        <main className="flex-1 p-4 lg:p-8">{children}</main>
+        <main className="flex-1 p-4 lg:p-8">
+          {allowed ? (
+            children
+          ) : (
+            <div className="panel mx-auto max-w-md p-8 text-center">
+              <h2 className="text-display text-base font-semibold">Acceso restringido</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Tu cuenta no tiene permisos para ver esta sección. Consulta tus pedidos desde el
+                menú lateral.
+              </p>
+              <Button className="mt-4" onClick={() => navigate({ to: "/mis-pedidos" })}>
+                Ir a mis pedidos
+              </Button>
+            </div>
+          )}
+        </main>
+
       </div>
     </div>
   );
