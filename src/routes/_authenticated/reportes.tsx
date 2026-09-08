@@ -99,6 +99,7 @@ function ReportesPage() {
 
   return (
     <AppShell
+      require="staff"
       title="Reportes"
       description="Consulta y exporta la información operativa por periodo"
       actions={

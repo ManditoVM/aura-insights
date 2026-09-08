@@ -91,6 +91,7 @@ function InventarioPage() {
 
   return (
     <AppShell
+      require="staff"
       title="Inventario"
       description="Existencias en tiempo real · todo cambio de stock genera un movimiento auditado"
       actions={

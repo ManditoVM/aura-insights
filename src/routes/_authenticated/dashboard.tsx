@@ -82,6 +82,7 @@ function Dashboard() {
 
   return (
     <AppShell
+      require="staff"
       title="Dashboard ejecutivo"
       description="Métricas en vivo de la operación · datos reales de la base de datos"
       actions={

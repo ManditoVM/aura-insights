@@ -165,6 +165,7 @@ function PedidosPage() {
 
   return (
     <AppShell
+      require="staff"
       title="Pedidos"
       description="Al confirmar se valida stock, se descuenta inventario y se registra la transacción"
       actions={

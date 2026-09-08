@@ -44,6 +44,7 @@ function InteligenciaPage() {
 
   return (
     <AppShell
+      require="staff"
       title="Centro de inteligencia"
       description="Cálculos deterministas sobre datos reales · las estimaciones se etiquetan como predicción"
       actions={

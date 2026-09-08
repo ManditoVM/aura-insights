@@ -69,6 +69,7 @@ function TransaccionesPage() {
 
   return (
     <AppShell
+      require="staff"
       title="Control transaccional"
       description="Registro económico y bitácora de auditoría de operaciones críticas"
       actions={

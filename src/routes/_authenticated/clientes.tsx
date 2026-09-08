@@ -85,6 +85,7 @@ function ClientesPage() {
 
   return (
     <AppShell
+      require="staff"
       title="Clientes"
       description={`${number(rows.length)} clientes · datos ficticios de demostración`}
       actions={
