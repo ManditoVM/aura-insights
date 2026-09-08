@@ -43,14 +43,16 @@ export function AppShell({
   title,
   description,
   actions,
+  require: requiredRole,
   children,
 }: {
   title: string;
   description?: string;
   actions?: ReactNode;
+  require?: "staff" | "admin";
   children: ReactNode;
 }) {
-  const { isStaff, isAdmin, user, signOut } = useAuth();
+  const { isStaff, isAdmin, loading, user, signOut } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
@@ -58,6 +60,9 @@ export function AppShell({
   const unread = (alerts.data ?? []).filter((a) => !a.read).length;
 
   const items = NAV.filter((i) => (i.adminOnly ? isAdmin : i.staffOnly ? isStaff : true));
+  const allowed =
+    !requiredRole || loading || (requiredRole === "admin" ? isAdmin : isStaff);
+
 
   return (
     <div className="flex min-h-screen bg-background">
