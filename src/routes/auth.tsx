@@ -88,12 +88,13 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     const { error } = await supabase.auth.signUp({
-      email,
+      email: email.trim().toLowerCase(),
       password,
       options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin },
     });
     if (error) {
-      toast.error(error.message);
+      toast.error(translate(error.message));
+
       setLoading(false);
       return;
     }
