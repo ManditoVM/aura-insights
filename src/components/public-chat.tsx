@@ -103,7 +103,7 @@ export function PublicChat() {
                     : "bg-secondary text-secondary-foreground",
                 )}
               >
-                {m.content}
+                {clean(m.content)}
               </div>
             ))}
             {loading && (
