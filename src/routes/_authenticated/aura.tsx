@@ -17,6 +17,17 @@ export const Route = createFileRoute("/_authenticated/aura")({
 
 type Msg = { role: "user" | "assistant"; content: string };
 
+/** Normaliza el texto del modelo a redacción plana y profesional. */
+function clean(text: string) {
+  return text
+    .replace(/```[a-z]*\n?/gi, "")
+    .replace(/[*_`#>]/g, "")
+    .replace(/^\s*[-•]\s?/gm, "- ")
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 const SUGGESTIONS = [
   "¿Qué productos están en riesgo de agotarse esta semana?",
   "¿Cómo van las ventas del mes comparadas con la tendencia?",
