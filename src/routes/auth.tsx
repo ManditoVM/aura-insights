@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,19 +34,52 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [ready, setReady] = useState(false);
+
+  // Evita que el formulario se envíe de forma nativa antes de que la página termine de cargar.
+  useEffect(() => setReady(true), []);
 
   const finish = async (name?: string) => {
-    const { role } = await bootstrap({ data: name ? { fullName: name } : {} });
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
+    let role: string = "customer";
+
+    if (user) {
+      // Camino rápido: si la cuenta ya tiene rol, evitamos la llamada de alta.
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id);
+
+      if (roles && roles.length > 0) {
+        role = roles.find((r) => r.role === "admin")?.role ?? roles[0]!.role;
+      } else {
+        const result = await bootstrap({ data: name ? { fullName: name } : {} });
+        role = result.role;
+      }
+    }
+
     toast.success("Sesión iniciada");
     await navigate({ to: role === "customer" ? "/mis-pedidos" : "/dashboard" });
+  };
+
+  const translate = (message: string) => {
+    if (/invalid login credentials/i.test(message)) return "Correo o contraseña incorrectos.";
+    if (/email not confirmed/i.test(message)) return "Tu correo aún no está confirmado.";
+    if (/already registered/i.test(message)) return "Ese correo ya tiene una cuenta.";
+    if (/at least 6 characters/i.test(message)) return "La contraseña debe tener al menos 6 caracteres.";
+    return message;
   };
 
   const onSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
+    });
     if (error) {
-      toast.error(error.message);
+      toast.error(translate(error.message));
       setLoading(false);
       return;
     }
@@ -54,16 +87,18 @@ function AuthPage() {
     setLoading(false);
   };
 
+
   const onSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     const { error } = await supabase.auth.signUp({
-      email,
+      email: email.trim().toLowerCase(),
       password,
       options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin },
     });
     if (error) {
-      toast.error(error.message);
+      toast.error(translate(error.message));
+
       setLoading(false);
       return;
     }
@@ -127,7 +162,7 @@ function AuthPage() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading || !ready}>
                   Entrar
                 </Button>
               </form>
@@ -166,7 +201,7 @@ function AuthPage() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading || !ready}>
                   Crear cuenta
                 </Button>
               </form>
@@ -178,7 +213,7 @@ function AuthPage() {
             <span className="h-px flex-1 bg-border" />
           </div>
 
-          <Button variant="outline" className="w-full" onClick={onGoogle}>
+          <Button variant="outline" className="w-full" onClick={onGoogle} disabled={!ready}>
             Google
           </Button>
         </div>
