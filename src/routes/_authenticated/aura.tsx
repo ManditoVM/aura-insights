@@ -75,21 +75,22 @@ function AuraPage() {
       title="Asistente AURA"
       description="Respuestas basadas en datos reales de la base de datos · las acciones requieren tu confirmación"
     >
-      <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-        <Panel className="flex h-[calc(100vh-12rem)] flex-col">
-          <div className="flex-1 space-y-4 overflow-y-auto pr-1">
+      <div className="grid min-h-0 gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <Panel className="flex h-[calc(100vh-12rem)] min-h-0 flex-col overflow-hidden">
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden pr-2">
             {messages.map((m, i) => (
               <div
                 key={i}
                 className={
                   m.role === "user"
-                    ? "ml-auto max-w-[80%] rounded-lg bg-primary/15 px-3 py-2 text-sm"
-                    : "max-w-[85%] rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap"
+                    ? "ml-auto max-w-[80%] overflow-hidden rounded-lg bg-primary/15 px-3 py-2 text-sm break-words whitespace-pre-wrap"
+                    : "max-w-[85%] overflow-hidden rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm leading-relaxed break-words whitespace-pre-wrap"
                 }
               >
-                {m.content}
+                {clean(m.content)}
               </div>
             ))}
+
             {send.isPending && (
               <p className="text-xs text-muted-foreground">AURA está consultando la base de datos…</p>
             )}
