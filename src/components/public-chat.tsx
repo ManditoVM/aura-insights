@@ -7,6 +7,15 @@ import { cn } from "@/lib/utils";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
+function clean(text: string) {
+  return text
+    .replace(/```[a-z]*\n?/gi, "")
+    .replace(/[*_`#>]/g, "")
+    .replace(/^\s*[-•]\s?/gm, "- ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 const WELCOME: Msg = {
   role: "assistant",
   content:
