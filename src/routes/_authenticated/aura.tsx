@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { auraChat, executeAuraAction, type AuraAction } from "@/lib/aura.functions";
 import { currency } from "@/lib/format";
+import { Markdown } from "@/components/markdown";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/aura")({
@@ -84,10 +85,10 @@ function AuraPage() {
                 className={
                   m.role === "user"
                     ? "ml-auto max-w-[80%] rounded-lg bg-primary/15 px-3 py-2 text-sm"
-                    : "max-w-[85%] rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap"
+                    : "max-w-[85%] rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm leading-relaxed"
                 }
               >
-                {m.content}
+                {m.role === "user" ? m.content : <Markdown>{m.content}</Markdown>}
               </div>
             ))}
             {send.isPending && (

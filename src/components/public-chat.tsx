@@ -4,6 +4,7 @@ import { MessageSquare, Send, X, Loader2 } from "lucide-react";
 import { publicChat } from "@/lib/aura.functions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Markdown } from "@/components/markdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -88,13 +89,13 @@ export function PublicChat() {
               <div
                 key={i}
                 className={cn(
-                  "max-w-[85%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap",
+                  "max-w-[85%] rounded-lg px-3 py-2 text-sm",
                   m.role === "user"
                     ? "ml-auto bg-primary text-primary-foreground"
                     : "bg-secondary text-secondary-foreground",
                 )}
               >
-                {m.content}
+                {m.role === "user" ? m.content : <Markdown>{m.content}</Markdown>}
               </div>
             ))}
             {loading && (
