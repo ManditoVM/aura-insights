@@ -53,6 +53,15 @@ function ProductoDetalle() {
         ) : (
           <>
             <div className="panel mt-6 p-8">
+              {product.image_url && (
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  width={816}
+                  height={816}
+                  className="mb-6 aspect-[16/9] w-full max-w-xl rounded-md object-cover"
+                />
+              )}
               <p className="text-xs text-muted-foreground">
                 {product.brand ?? "Sin marca"} · {product.categories?.name ?? "Sin categoría"} · SKU {product.sku}
               </p>

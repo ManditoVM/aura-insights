@@ -123,6 +123,16 @@ function Catalogo() {
                 params={{ sku: p.sku }}
                 className="panel flex flex-col p-5 transition-colors hover:border-primary/50"
               >
+                {p.image_url && (
+                  <img
+                    src={p.image_url}
+                    alt={p.name}
+                    loading="lazy"
+                    width={816}
+                    height={816}
+                    className="mb-4 aspect-[4/3] w-full rounded-md object-cover"
+                  />
+                )}
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold">{p.name}</p>

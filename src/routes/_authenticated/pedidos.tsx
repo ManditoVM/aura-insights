@@ -63,14 +63,7 @@ function PedidosPage() {
 
   const rows = (orders.data ?? []).filter((o) => status === "todos" || o.status === status);
   const pending = (orders.data ?? []).filter((o) => o.status === "pendiente");
-  const monthTotal = (orders.data ?? [])
-    .filter(
-      (o) =>
-        o.status !== "cancelado" &&
-        o.status !== "pendiente" &&
-        new Date(o.created_at).getMonth() === new Date().getMonth(),
-    )
-    .reduce((a, o) => a + Number(o.total), 0);
+  const monthTotal = monthSales(orders.data ?? []);
 
   const items = useQuery({
     queryKey: ["order-items", detail],

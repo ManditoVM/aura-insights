@@ -25,6 +25,8 @@ import { dailySeries } from "@/lib/analytics";
 import { currency, compactCurrency, number, shortDate } from "@/lib/format";
 import { auraInsightsBriefing } from "@/lib/aura.functions";
 import { toast } from "sonner";
+import { billedOrdersSince, monthSales } from "@/lib/sales";
+import { Markdown } from "@/components/markdown";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -53,16 +55,11 @@ function Dashboard() {
 
   const series = useMemo(() => dailySeries(sales, 30), [sales]);
 
-  const today = new Date().toISOString().slice(0, 10);
-  const monthStart = new Date();
-  monthStart.setDate(1);
-
-  const salesToday = series.find((s) => s.date === today)?.revenue ?? 0;
-  const salesMonth = series
-    .filter((s) => new Date(s.date) >= monthStart)
-    .reduce((a, s) => a + s.revenue, 0);
-
   const allOrders = orders.data ?? [];
+  const todayStart = new Date(new Date().toISOString().slice(0, 10) + "T00:00:00Z");
+  const salesToday = billedOrdersSince(allOrders, todayStart).reduce((a, o) => a + Number(o.total), 0);
+  const salesMonth = monthSales(allOrders);
+
   const pending = allOrders.filter((o) => o.status === "pendiente").length;
   const inventoryValue = metrics.reduce((a, m) => a + m.stockValue, 0);
   const lowStock = metrics.filter((m) => m.product.stock <= m.product.min_stock).length;
@@ -94,8 +91,8 @@ function Dashboard() {
       }
     >
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Ventas de hoy" value={currency(salesToday)} hint="Pedidos no cancelados" />
-        <KpiCard label="Ventas del mes" value={currency(salesMonth)} hint="Acumulado mensual" />
+        <KpiCard label="Ventas de hoy" value={currency(salesToday)} hint="Pedidos confirmados o posteriores" />
+        <KpiCard label="Ventas del mes" value={currency(salesMonth)} hint="Mes calendario · IVA incluido" />
         <KpiCard
           label="Pedidos pendientes"
           value={number(pending)}
@@ -247,8 +244,8 @@ function Dashboard() {
         >
           <div className="space-y-3">
             {briefing && (
-              <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-xs leading-relaxed whitespace-pre-wrap">
-                {briefing}
+              <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-xs leading-relaxed">
+                <Markdown>{briefing}</Markdown>
               </div>
             )}
 
