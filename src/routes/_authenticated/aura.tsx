@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Send, Sparkles, ShieldCheck } from "lucide-react";
+import { Send, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Panel } from "@/components/data-card";
 import { Button } from "@/components/ui/button";
@@ -38,12 +38,14 @@ function AuraPage() {
   ]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState<AuraAction | null>(null);
+  const endRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { endRef.current?.scrollIntoView({ block: "nearest" }); }, [messages, pending, send.isPending]);
 
   const send = useMutation({
     mutationFn: async (text: string) => {
       const next: Msg[] = [...messages, { role: "user", content: text }];
       setMessages(next);
-      return chat({ data: { messages: next.filter((m) => m.role !== "assistant" || true) } });
+      return chat({ data: { messages: next } });
     },
     onSuccess: (reply) => {
       setMessages((m) => [...m, { role: "assistant", content: reply.content }]);
