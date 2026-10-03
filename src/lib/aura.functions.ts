@@ -196,29 +196,69 @@ export const auraChat = createServerFn({ method: "POST" })
 /** Redacta y prioriza los insights del centro de inteligencia (AURA Insights). */
 export const auraInsightsBriefing = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .inputValidator((input: { force?: boolean } | undefined) => ({ force: input?.force === true }))
+  .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
     const { data: staff } = await supabase.rpc("is_staff", { _user_id: userId });
     if (!staff) throw new Error("No autorizado");
 
-    const { buildContextPack, callGateway } = await import("./aura.server");
+    if (!data.force) {
+      const { data: saved, error } = await supabase.from("ai_insights")
+        .select("body,generated_at")
+        .eq("type", "resumen")
+        .gte("generated_at", new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString())
+        .order("generated_at", { ascending: false }).limit(1).maybeSingle();
+      if (error) throw new Error(error.message);
+      if (saved) return { briefing: saved.body, generatedAt: saved.generated_at };
+    }
+    const { buildContextPack } = await import("./aura.server");
+    const { writeExecutiveBriefing } = await import("./aura-ai.server");
     const pack = await buildContextPack(supabase);
+    const briefing = await writeExecutiveBriefing(pack);
+    const { data: saved, error } = await supabase.from("ai_insights").insert({
+      type: "resumen", severity: "insight", title: "Informe ejecutivo AURA",
+      body: briefing, source: "ia", data: { ventas_mes_actual: pack.kpis.ventas_mes_actual },
+    }).select("generated_at").single();
+    if (error) throw new Error(`No se pudo guardar el informe: ${error.message}`);
+    return { briefing, generatedAt: saved.generated_at };
+  });
 
-    const result = await callGateway({
-      messages: [
-        {
-          role: "system",
-          content:
-            "Eres AURA. Recibes métricas ya calculadas de una empresa. Redacta un informe ejecutivo en español, en markdown, con máximo 5 viñetas priorizadas por impacto. Usa solo las cifras del JSON, no inventes datos. Marca explícitamente qué es dato, qué es estimación y qué es recomendación. Sé directo y sin relleno.",
-        },
-        { role: "user", content: JSON.stringify(pack) },
-      ],
-    });
-
-    return {
-      briefing: result.choices?.[0]?.message?.content ?? "",
-      generatedAt: new Date().toISOString(),
-    };
+/** Reutiliza la instantánea reciente, o recalcula y registra todas las predicciones. */
+export const auraPredictions = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { force?: boolean } | undefined) => ({ force: input?.force === true }))
+  .handler(async ({ context, data }) => {
+    const { supabase, userId } = context;
+    const { data: staff } = await supabase.rpc("is_staff", { _user_id: userId });
+    if (!staff) throw new Error("No autorizado");
+    const { data: latest, error: latestError } = await supabase.from("predictions")
+      .select("generated_at").eq("horizon_days", 7).order("generated_at", { ascending: false }).limit(1).maybeSingle();
+    if (latestError) throw new Error(latestError.message);
+    if (!data.force && latest && new Date(latest.generated_at).getTime() > Date.now() - 4 * 60 * 60 * 1000) {
+      const { data: rows, error } = await supabase.from("predictions")
+        .select("product_id,estimated_demand,trend,confidence,generated_at")
+        .eq("horizon_days", 7).eq("generated_at", latest.generated_at);
+      if (error) throw new Error(error.message);
+      if (rows?.length) return rows;
+    }
+    const { computeProductMetrics } = await import("./analytics");
+    const since = new Date(Date.now() - 90 * 86_400_000).toISOString();
+    const [{ data: products, error: productsError }, { data: items, error: itemsError }] = await Promise.all([
+      supabase.from("products").select("id,sku,name,stock,min_stock,max_stock,price,cost,category_id"),
+      supabase.from("order_items").select("product_id,quantity,line_total,created_at,orders!inner(status)")
+        .gte("created_at", since).not("orders.status", "in", "(cancelado,pendiente)").limit(5000),
+    ]);
+    if (productsError || itemsError) throw new Error(productsError?.message ?? itemsError?.message);
+    const metrics = computeProductMetrics((products ?? []).map((p) => ({ ...p, price: Number(p.price), cost: Number(p.cost) })),
+      (items ?? []).map((r) => ({ ...r, line_total: Number(r.line_total) })));
+    if (!metrics.length) return [];
+    const generatedAt = new Date().toISOString();
+    const { data: rows, error } = await supabase.from("predictions").insert(metrics.map((m) => ({
+      product_id: m.product.id, horizon_days: 7, estimated_demand: m.forecast7,
+      trend: m.trend, confidence: m.confidence, method: "regresion_lineal", generated_at: generatedAt,
+    }))).select("product_id,estimated_demand,trend,confidence,generated_at");
+    if (error) throw new Error(`No se pudieron guardar las predicciones: ${error.message}`);
+    return rows;
   });
 
 /** Ejecuta una acción propuesta por AURA, solo tras confirmación explícita. */
