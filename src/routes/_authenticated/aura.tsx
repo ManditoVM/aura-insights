@@ -13,6 +13,13 @@ import { Markdown } from "@/components/markdown";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/aura")({
+  head: () => ({ meta: [
+    { title: "Asistente AURA — AURA AI" },
+    { name: "description", content: "Asistente empresarial con consultas de inventario, clientes y ventas en tiempo real." },
+    { property: "og:title", content: "Asistente AURA — AURA AI" },
+    { property: "og:description", content: "Consultas empresariales y operaciones supervisadas con AURA AI." },
+    { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
+  ] }),
   component: AuraPage,
 });
 
@@ -78,16 +85,16 @@ function AuraPage() {
       title="Asistente AURA"
       description="Respuestas basadas en datos reales de la base de datos · las acciones requieren tu confirmación"
     >
-      <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-        <Panel className="flex h-[calc(100vh-12rem)] flex-col">
-          <div className="flex-1 space-y-4 overflow-y-auto pr-1">
+      <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="panel flex h-[min(700px,calc(100dvh-11rem))] min-h-80 min-w-0 flex-col overflow-hidden p-4">
+          <div className="min-h-0 min-w-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden pr-1">
             {messages.map((m, i) => (
               <div
                 key={i}
                 className={
                   m.role === "user"
-                    ? "ml-auto max-w-[80%] rounded-lg bg-primary/15 px-3 py-2 text-sm"
-                    : "max-w-[85%] rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm leading-relaxed"
+                    ? "ml-auto max-w-[80%] break-words rounded-lg bg-primary/15 px-3 py-2 text-sm"
+                    : "max-w-[85%] break-words rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm leading-relaxed"
                 }
               >
                 {m.role === "user" ? m.content : <Markdown>{m.content}</Markdown>}
@@ -131,10 +138,11 @@ function AuraPage() {
                 </div>
               </div>
             )}
+            <div ref={endRef} />
           </div>
 
           <form
-            className="mt-4 flex gap-2 border-t border-border pt-3"
+            className="mt-4 flex shrink-0 gap-2 border-t border-border pt-3"
             onSubmit={(e) => {
               e.preventDefault();
               submit(input);
@@ -149,19 +157,19 @@ function AuraPage() {
               <Send className="size-4" />
             </Button>
           </form>
-        </Panel>
+        </div>
 
         <Panel title="Sugerencias" description="Consultas de ejemplo para la demostración">
           <div className="space-y-2">
             {SUGGESTIONS.map((s) => (
-              <button
+              <Button
                 key={s}
                 onClick={() => submit(s)}
-                className="w-full rounded-md border border-border bg-surface/50 px-3 py-2 text-left text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+                variant="outline"
+                className="h-auto w-full justify-start whitespace-normal text-left text-xs text-muted-foreground"
               >
-                <Sparkles className="mr-1.5 inline size-3 text-primary" />
                 {s}
-              </button>
+              </Button>
             ))}
           </div>
         </Panel>
