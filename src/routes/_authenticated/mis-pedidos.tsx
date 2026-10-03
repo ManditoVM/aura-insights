@@ -7,6 +7,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { currency, dateOnly } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/mis-pedidos")({
+  head: () => ({ meta: [
+    { title: "Mis pedidos — AURA AI" },
+    { name: "description", content: "Consulta el historial de pedidos de tu cuenta en AURA AI." },
+    { property: "og:title", content: "Mis pedidos — AURA AI" },
+    { property: "og:description", content: "Historial personal de compras y estados de pedidos en AURA AI." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: MisPedidos,
 });
 
@@ -17,9 +25,18 @@ function MisPedidos() {
     queryKey: ["my-orders", user?.id],
     enabled: Boolean(user?.id),
     queryFn: async () => {
+      if (!user?.id) return [];
+      const { data: customerRows, error: customerError } = await supabase
+        .from("customers")
+        .select("id")
+        .eq("user_id", user.id);
+      if (customerError) throw customerError;
+      const customerIds = (customerRows ?? []).map((customer) => customer.id);
+      if (customerIds.length === 0) return [];
       const { data, error } = await supabase
         .from("orders")
         .select("*, order_items(quantity, unit_price, line_total, products(name))")
+        .in("customer_id", customerIds)
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
