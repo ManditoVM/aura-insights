@@ -11,6 +11,7 @@ import {
   type ProductRow,
   type SaleRow,
 } from "./analytics";
+import { isBilled, monthSales } from "./sales";
 
 export const AI_MODEL = "google/gemini-3.7-flash";
 
@@ -87,17 +88,11 @@ export async function buildContextPack(supabase: SupabaseClient) {
   const anomalies = detectAnomalies(productRows, sales);
   const series = dailySeries(sales, 30);
 
-  const monthStart = new Date();
-  monthStart.setDate(1);
-  monthStart.setHours(0, 0, 0, 0);
-
-  const salesMonth = (orders ?? [])
-    .filter((o) => !["cancelado", "pendiente"].includes(o.status) && new Date(o.created_at) >= monthStart)
-    .reduce((a, o) => a + Number(o.total), 0);
+  const salesMonth = monthSales(orders ?? []);
 
   const byCustomer = new Map<string, number>();
   for (const o of orders ?? []) {
-    if (["cancelado", "pendiente"].includes(o.status)) continue;
+    if (!isBilled(o.status)) continue;
     byCustomer.set(o.customer_id, (byCustomer.get(o.customer_id) ?? 0) + Number(o.total));
   }
   const topCustomers = [...byCustomer.entries()]

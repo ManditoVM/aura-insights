@@ -25,6 +25,7 @@ import {
 import { useCustomers, useIntelligence, useOrders } from "@/hooks/useBusiness";
 import { supabase } from "@/integrations/supabase/client";
 import { currency, dateTime, downloadCsv, number } from "@/lib/format";
+import { monthSales } from "@/lib/sales";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/pedidos")({

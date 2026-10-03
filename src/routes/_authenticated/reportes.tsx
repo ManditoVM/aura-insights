@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { useCustomers, useIntelligence, useMovements, useOrders } from "@/hooks/useBusiness";
 import { currency, dateOnly, downloadCsv, number } from "@/lib/format";
+import { billedOrdersSince, currentMonthStart, monthSales } from "@/lib/sales";
 
 export const Route = createFileRoute("/_authenticated/reportes")({
   head: () => ({
@@ -43,13 +44,11 @@ function ReportesPage() {
   const movements = useMovements();
   const { metrics } = useIntelligence();
 
-  const since = Date.now() - (RANGES[range] ?? 30) * 86_400_000;
+  const since = range === "mes" ? currentMonthStart().getTime() : Date.now() - (RANGES[range] ?? 30) * 86_400_000;
   const inRange = (d: string) => new Date(d).getTime() >= since;
 
-  const sales = (orders.data ?? []).filter(
-    (o) => inRange(o.created_at) && o.status !== "cancelado" && o.status !== "pendiente",
-  );
-  const revenue = sales.reduce((a, o) => a + Number(o.total), 0);
+  const sales = billedOrdersSince(orders.data ?? [], new Date(since));
+  const revenue = range === "mes" ? monthSales(orders.data ?? []) : sales.reduce((a, o) => a + Number(o.total), 0);
   const newCustomers = (customers.data ?? []).filter((c) => inRange(c.created_at));
   const rangeMovements = (movements.data ?? []).filter((m) => inRange(m.created_at));
 
@@ -111,7 +110,7 @@ function ReportesPage() {
             <SelectContent>
               <SelectItem value="hoy">Hoy</SelectItem>
               <SelectItem value="semana">Última semana</SelectItem>
-              <SelectItem value="mes">Último mes</SelectItem>
+              <SelectItem value="mes">Mes actual</SelectItem>
               <SelectItem value="trimestre">Último trimestre</SelectItem>
               <SelectItem value="anio">Último año</SelectItem>
             </SelectContent>
