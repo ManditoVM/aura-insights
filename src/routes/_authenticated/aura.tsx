@@ -46,7 +46,6 @@ function AuraPage() {
   const [input, setInput] = useState("");
   const [pending, setPending] = useState<AuraAction | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
-  useEffect(() => { endRef.current?.scrollIntoView({ block: "nearest" }); }, [messages, pending, send.isPending]);
 
   const send = useMutation({
     mutationFn: async (text: string) => {
@@ -60,6 +59,8 @@ function AuraPage() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
+  useEffect(() => { endRef.current?.scrollIntoView({ block: "nearest" }); }, [messages, pending, send.isPending]);
 
   const confirm = useMutation({
     mutationFn: (action: AuraAction) => execute({ data: { action } }),
