@@ -19,15 +19,16 @@ export async function writeExecutiveBriefing(context: unknown) {
       return response;
     },
   });
-  const messages: ModelMessage[] = [
-    { role: "system", content: "Eres AURA. Redacta un informe ejecutivo profesional en español, claro y conciso, con hasta cinco prioridades. Usa solo cifras del contexto, sin inventar. Identifica dato real, estimación y recomendación. No incluyas bloques de código ni JSON. No muestres caracteres de formato sin propósito." },
-    { role: "user", content: JSON.stringify(context) },
-  ];
+  const messages: ModelMessage[] = [{ role: "user", content: JSON.stringify(context) }];
+  let streamError: unknown;
   const result = streamText({
     model: openai.responses(MODEL), messages, maxRetries: 0,
+    instructions: "Eres AURA. Redacta un informe ejecutivo profesional en español, claro y conciso, con hasta cinco prioridades. Usa solo cifras del contexto, sin inventar. Identifica dato real, estimación y recomendación. Usa Markdown simple (títulos breves, viñetas, negritas). No incluyas bloques de código ni JSON.",
+    onError: ({ error }) => { streamError = error; },
     providerOptions: { openai: { forceReasoning: true, reasoningEffort: "medium", reasoningSummary: "auto", store: false, include: ["reasoning.encrypted_content"] } },
   });
-  const text = (await result.text).trim();
+  let text = "";
+  try { text = (await result.text).trim(); } catch (e) { throw streamError instanceof Error ? streamError : e; }
   if (!text) throw new Error("AURA no devolvió un informe. Intenta de nuevo más tarde.");
   return text;
 }
