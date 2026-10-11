@@ -27,7 +27,8 @@ export async function writeExecutiveBriefing(context: unknown) {
     onError: ({ error }) => { streamError = error; },
     providerOptions: { openai: { forceReasoning: true, reasoningEffort: "medium", reasoningSummary: "auto", store: false, include: ["reasoning.encrypted_content"] } },
   });
-  const text = (await result.text).trim();
+  let text = "";
+  try { text = (await result.text).trim(); } catch (e) { throw streamError instanceof Error ? streamError : e; }
   if (!text) throw new Error("AURA no devolvió un informe. Intenta de nuevo más tarde.");
   return text;
 }
