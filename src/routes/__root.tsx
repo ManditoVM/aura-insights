@@ -42,6 +42,15 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
+    const msg = String((error as Error)?.message ?? error);
+    if (/dynamically imported module|Importing a module script failed|error loading dynamically/i.test(msg)) {
+      // Stale assets after a new publish: reload once to fetch the fresh version.
+      if (!sessionStorage.getItem("aura-chunk-reload")) {
+        sessionStorage.setItem("aura-chunk-reload", "1");
+        window.location.reload();
+        return;
+      }
+    }
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
@@ -125,6 +134,21 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+
+  useEffect(() => {
+    const onPreloadError = (e: Event) => {
+      if (sessionStorage.getItem("aura-chunk-reload")) return;
+      e.preventDefault();
+      sessionStorage.setItem("aura-chunk-reload", "1");
+      window.location.reload();
+    };
+    window.addEventListener("vite:preloadError", onPreloadError);
+    const t = window.setTimeout(() => sessionStorage.removeItem("aura-chunk-reload"), 10000);
+    return () => {
+      window.removeEventListener("vite:preloadError", onPreloadError);
+      window.clearTimeout(t);
+    };
+  }, []);
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event) => {
